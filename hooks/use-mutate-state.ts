@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
-type MutationArgTypes<PayloadData, ResponseData> = {
-    mutationFn: (payload: PayloadData) => Promise<Response>,
-    onSuccess: (responseData: ResponseData, payloadData: PayloadData) => void | Promise<void>
-
+type MutationArgTypes<PayloadData, ResponseData, ResponseError> = {
+    mutationFn: (payload: PayloadData) => Promise<ResponseData>
+    onSuccess?: (responseData: ResponseData, payloadData: PayloadData) => void | Promise<void>
+    onError?: (errorResponse: ResponseError) => void | Promise<void>
 }
-const useMutateState = <PayloadData, ResponseData>(
-    { mutationFn, onSuccess }: MutationArgTypes<PayloadData, ResponseData>
+const useMutateState = <PayloadData, ResponseData, ResponseError>(
+    { mutationFn, onSuccess, onError }: MutationArgTypes<PayloadData, ResponseData, ResponseError>
 ) => {
 
     const [isLoading, setIsLoading] = React.useState(false)
@@ -18,31 +18,24 @@ const useMutateState = <PayloadData, ResponseData>(
         setIsLoading(true)
         try {
             const data = await mutationFn(payload)
-            const responseData = await data.json()
-            setData(responseData)
-            await onSuccess(responseData, payload)
+            setData(data)
+            if (onSuccess) {
+                await onSuccess(data, payload)
+            }
         } catch (queryError: any) {
             setError({ error: queryError?.message })
+            if (onError) {
+                onError(queryError.message)
+            }
         } finally {
             setIsSuccess(true)
             setIsLoading(false)
         }
-    }, [mutationFn, onSuccess])
+    }, [mutationFn, onError, onSuccess])
 
     const mutateQuery = (payload: PayloadData) => {
         makeQuery(payload)
     }
-
-    // const successFn = () => {
-    //     return onSuccess("some-response-data", payload)
-    // }
-
-    // useEffect(() => {
-    //     if (isSuccess) {
-    //         successFn()
-    //     }
-    // }, [isSuccess])
-
 
     return { data: error ? undefined : data, isLoading, error, isSuccess, mutateQuery }
 }

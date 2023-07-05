@@ -9,13 +9,13 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import useMutateState from "@/hooks/use-mutate-state"
-import { waitTester } from "@/lib/utils"
+import { axios } from "@/lib/axios"
+import { toast } from 'react-hot-toast'
+import { StoreServices } from "@/services"
+import { StorePayload, StoreSuccessResponse } from "@/types/store"
+import useCreateStore from "@/service-hooks/use-store"
 
-type StoreResponse = {
-    "id": string,
-    "name": string,
-    "userId": string,
-}
+
 
 
 const formSchema = z.object({
@@ -32,26 +32,13 @@ const StoreModal = () => {
         }
     })
 
-    const { data, isLoading, mutateQuery, error } = useMutateState<{ name: string }, StoreResponse>({
-        mutationFn: (payload) => fetch("/api/stores", {
-            method: "POST",
-            body: JSON.stringify({
-                ...payload
-            })
-        }),
-        onSuccess: async (responseData, payloadData) => {
-            console.log('success', { payloadData })
-        }
-    })
-
+    const { isLoading, mutateQuery } = useCreateStore()
 
     const { handleSubmit, control } = form
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        // TODO: Create Store
         mutateQuery({ name: values.name })
     }
-    console.log({ isLoading, error, data });
 
     return (
         <Modal
