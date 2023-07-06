@@ -5,18 +5,10 @@ import { Modal } from "../ui/modal"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import useMutateState from "@/hooks/use-mutate-state"
-import { axios } from "@/lib/axios"
-import { toast } from 'react-hot-toast'
-import { StoreServices } from "@/services"
-import { StorePayload, StoreSuccessResponse } from "@/types/store"
-import useCreateStore from "@/service-hooks/use-store"
-
-
-
+import useCreateStore from "@/service-hooks/use-create-store"
 
 const formSchema = z.object({
     name: z.string().min(3, { message: "String must contain at least 3 character(s)" }),
@@ -32,12 +24,15 @@ const StoreModal = () => {
         }
     })
 
-    const { isLoading, mutateQuery } = useCreateStore()
+    const { isLoading, mutateAsyncQuery } = useCreateStore()
 
     const { handleSubmit, control } = form
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        mutateQuery({ name: values.name })
+        const value = await mutateAsyncQuery({ name: values.name })
+        if (value.responseData) {
+            window.location.assign(`/${value.responseData.id}`)
+        }
     }
 
     return (
@@ -71,6 +66,7 @@ const StoreModal = () => {
                                     variant="outline"
                                     onClick={onClose}
                                     disabled={isLoading}
+                                    type="button"
                                 >
                                     Cancel
                                 </Button>

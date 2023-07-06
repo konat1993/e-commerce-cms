@@ -12,23 +12,25 @@ const useMutateState = <PayloadData, ResponseData, ResponseError>(
     const [isLoading, setIsLoading] = React.useState(false)
     const [isSuccess, setIsSuccess] = React.useState(false)
     const [data, setData] = React.useState<ResponseData | undefined>(undefined)
-    const [error, setError] = React.useState<{ error: { message: string } } | undefined>(undefined)
+    const [error, setError] = React.useState<ResponseError | undefined>(undefined)
 
     const makeQuery = React.useCallback(async (payload: PayloadData) => {
         setIsLoading(true)
         try {
-            const data = await mutationFn(payload)
-            setData(data)
+            const responseData = await mutationFn(payload)
+            setData(responseData)
             if (onSuccess) {
-                await onSuccess(data, payload)
+                await onSuccess(responseData, payload)
+                setIsSuccess(true)
             }
-        } catch (queryError: any) {
-            setError({ error: queryError?.message })
+            return { responseData }
+        } catch (queryError) {
+            setError(queryError as ResponseError)
             if (onError) {
-                onError(queryError.message)
+                await onError(queryError as ResponseError)
             }
+            return { error: queryError }
         } finally {
-            setIsSuccess(true)
             setIsLoading(false)
         }
     }, [mutationFn, onError, onSuccess])
@@ -37,7 +39,13 @@ const useMutateState = <PayloadData, ResponseData, ResponseError>(
         makeQuery(payload)
     }
 
-    return { data: error ? undefined : data, isLoading, error, isSuccess, mutateQuery }
+    const mutateAsyncQuery = async (payload: PayloadData) => {
+        const response = await makeQuery(payload)
+
+        return response
+    }
+
+    return { data: error ? undefined : data, isLoading, error, isSuccess, mutateQuery, mutateAsyncQuery }
 }
 
 export default useMutateState

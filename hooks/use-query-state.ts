@@ -1,36 +1,43 @@
 import React, { useEffect } from 'react'
 
-const useQueryState = ({ queryFn }: { queryFn: () => Promise<any> }) => {
-    const [isLoading, setIsLoading] = React.useState(true)
-    const [data, setData] = React.useState(undefined)
-    const [error, setError] = React.useState<{ error: { message: string } } | undefined>(undefined)
+type QueryArgTypes<ResponseData, ResponseError> = {
+    queryFn: () => Promise<ResponseData>
+    onSuccess?: (responseData: ResponseData) => void | Promise<void>
+    onError?: (errorResponse: ResponseError) => void | Promise<void>
+}
+const useMutateState = <ResponseData, ResponseError>(
+    { queryFn, onSuccess, onError }: QueryArgTypes<ResponseData, ResponseError>
+) => {
 
-    const makeQuery = React.useCallback(() => {
-        async () => {
-            setIsLoading(true)
+    const [isLoading, setIsLoading] = React.useState(false)
+    const [isSuccess, setIsSuccess] = React.useState(false)
+    const [data, setData] = React.useState<ResponseData | undefined>(undefined)
+    const [error, setError] = React.useState<ResponseError | undefined>(undefined)
 
-            try {
-                const data = await queryFn()
-                setData(data)
-            } catch (queryError: any) {
-                setError({ error: queryError?.message })
-            } finally {
-                setIsLoading(false)
+    const makeQuery = React.useCallback(async () => {
+        setIsLoading(true)
+        try {
+            const data = await queryFn()
+            setData(data)
+            if (onSuccess) {
+                await onSuccess(data)
             }
+        } catch (queryError) {
+            setError(queryError as ResponseError)
+            if (onError) {
+                onError(queryError as ResponseError)
+            }
+        } finally {
+            setIsSuccess(true)
+            setIsLoading(false)
         }
-    }, [queryFn])
-
-    const invokeQuery = () => {
-        makeQuery()
-    }
-
+    }, [queryFn, onError, onSuccess])
 
     useEffect(() => {
         makeQuery()
     }, [makeQuery])
-    console.log("test");
 
-    return { data, isLoading, error, invokeQuery }
+    return { data: error ? undefined : data, isLoading, error, isSuccess }
 }
 
-export default useQueryState
+export default useMutateState
