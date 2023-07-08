@@ -1,6 +1,7 @@
-import useGetStore from '@/service-hooks/use-get-store'
 import { auth } from '@clerk/nextjs'
+import axios from 'axios'
 import { redirect } from 'next/navigation'
+import prisma from "../../lib/prismadb"
 
 const SetupLayout = async ({ children }: React.PropsWithChildren) => {
     const { userId } = auth()
@@ -9,7 +10,11 @@ const SetupLayout = async ({ children }: React.PropsWithChildren) => {
         redirect('/sign-in')
     }
 
-    const store = await useGetStore({ userId })
+    const store = await prisma?.store.findFirst(
+        {
+            where:
+                { userId }
+        })
 
     if (store) {
         redirect(`/${store.id}`)
