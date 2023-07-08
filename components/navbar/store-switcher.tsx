@@ -30,6 +30,7 @@ const StoreSwitcher = ({ className, items = [] }: Props) => {
   }))
 
   const currentStore = formattedItems.find(item => item.value === params.storeId)
+  const defaultStoreText = currentStore?.label || "Select store..."
 
   const onStoreSelect = (store: typeof formattedItems[0]) => {
     setOpen(false)
@@ -46,10 +47,12 @@ const StoreSwitcher = ({ className, items = [] }: Props) => {
           aria-expanded={open}
           aria-label="Select a store"
           className={cn("w-combo_box justify-between", className)}
+          title={defaultStoreText}
         >
           <StoreIcon className="mr-2 h-4 w-4" />
-          {/* TODO: Trim store name if its too long and add tooltip to let user read it whole */}
-          {currentStore?.label || "Select store..."}
+          <span className='overflow-hidden text-ellipsis whitespace-nowrap'>
+            {defaultStoreText}
+          </span>
           <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
