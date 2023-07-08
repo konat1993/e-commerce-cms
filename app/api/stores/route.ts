@@ -15,7 +15,7 @@ export async function POST(req: Request) {
         }
 
         const store = await prisma?.store.create({ data: { name, userId } })
-        console.log({ store })
+
         return NextResponse.json(store)
 
     } catch (error) {
@@ -23,14 +23,4 @@ export async function POST(req: Request) {
         return new NextResponse("Internal error", { status: 500 })
     }
 
-}
-
-export async function GET(req: Request) {
-    console.log("kupka");
-
-    const { searchParams } = new URL(req.url)
-    const id = searchParams.get('id')
-    console.log({ id })
-
-    return NextResponse.json({ id })
 }

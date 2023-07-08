@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs"
 import { redirect } from "next/navigation"
 import prisma from "../../../lib/prismadb"
+import Navbar from "@/components/navbar"
 
 type Props = {
     params: { storeId: string }
@@ -25,7 +26,7 @@ const DashboardLayout = async ({ children, params }: React.PropsWithChildren<Pro
 
     return (
         <div>
-            DashboardLayout
+            <Navbar />
             <div>{children}</div>
         </div>
     )

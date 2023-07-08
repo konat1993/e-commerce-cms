@@ -1,11 +1,11 @@
-import axios from "axios"
+import { prisma } from "@/lib"
 
 type Props = {
     params: { storeId: string }
 }
 
 const RoutesPage = async ({ params }: Props) => {
-    const store = await prisma?.store.findFirst(
+    const store = await prisma.store.findFirst(
         {
             where:
                 { id: params.storeId }
