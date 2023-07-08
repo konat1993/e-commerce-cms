@@ -1,21 +1,31 @@
 "use client"
 
+import React from 'react'
 import { Store } from '@prisma/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useParams } from 'next/navigation'
 
 import { Heading } from '../ui/heading'
 import { Button } from '../ui/button'
 import { Separator } from '../ui/separator'
 import { EditFormValues } from '@/types/store/edit'
 import { storeFormSchema } from '@/lib/zod-schemas'
-import React from 'react'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
+} from '../ui/form'
 import { Input } from '../ui/input'
 import useEditStore from '@/service-hooks/use-edit-store'
 import useDeleteStore from '@/service-hooks/use-delete-store'
 import AlertModal from '../modals/alert-modal'
+import ApiAlert from '../ui/api-alert'
+import useOrigin from '@/hooks/use-origin'
 
 type Props = {
     initialData: Store
@@ -23,6 +33,8 @@ type Props = {
 
 const SettingsForm = ({ initialData }: Props) => {
     const [open, setOpen] = React.useState(false)
+    const params = useParams()
+    const origin = useOrigin()
 
     const form = useForm<EditFormValues>({
         resolver: zodResolver(storeFormSchema),
@@ -95,6 +107,27 @@ const SettingsForm = ({ initialData }: Props) => {
                     </Button>
                 </form>
             </Form>
+
+            <Separator />
+
+            <ApiAlert
+                title="NEXT_PUBLIC_API_URL"
+                description={`${origin}/api/${params.storeId}`}
+                variant='public'
+                loading={origin === ""}
+            />
+            <ApiAlert
+                title="NEXT_PUBLIC_API_URL"
+                description={`${origin}/api/${params.storeId}`}
+                variant='public'
+                loading={origin === ""}
+            />
+            <ApiAlert
+                title="NEXT_PUBLIC_API_URL"
+                description={`${origin}/api/${params.storeId}`}
+                variant='public'
+                loading={origin === ""}
+            />
         </>
     )
 }
