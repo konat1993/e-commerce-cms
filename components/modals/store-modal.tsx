@@ -2,37 +2,33 @@
 
 import { useStoreModal } from "@/hooks/use-store-modal"
 import { Modal } from "../ui/modal"
-import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import useCreateStore from "@/service-hooks/use-create-store"
+import { storeFormSchema } from "@/lib/zod-schemas"
+import { StoreFormValues } from "@/types/store"
 
-const formSchema = z.object({
-    name: z.string().min(3, { message: "String must contain at least 3 character(s)" }),
-})
+
 
 const StoreModal = () => {
     const { isOpen, onClose } = useStoreModal()
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<StoreFormValues>({
+        resolver: zodResolver(storeFormSchema),
         defaultValues: {
             name: ""
         }
     })
 
-    const { isLoading, mutateAsyncQuery } = useCreateStore()
+    const { isLoading, mutateQuery } = useCreateStore()
 
     const { handleSubmit, control } = form
 
-    const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        const value = await mutateAsyncQuery({ name: values.name })
-        if (value.responseData) {
-            window.location.assign(`/${value.responseData.id}`)
-        }
+    const onSubmit = (values: StoreFormValues) => {
+        mutateQuery({ name: values.name })
     }
 
     return (

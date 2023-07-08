@@ -8,6 +8,9 @@ const useCreateStore = () => useMutateState<CreateStorePayload, CreateStoreSucce
         const response = await axios.post("/api/stores", payload)
         return response.data
     },
+    onSuccess: (responseData) => {
+        window.location.assign(`/${responseData.id}`)
+    },
     onError: (errorResponse) => {
         toast.error(`Something went wrong while creating store (${errorResponse.message})`)
     }

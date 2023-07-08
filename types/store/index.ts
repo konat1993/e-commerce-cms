@@ -1,2 +1,2 @@
-export type { CreateStoreErrorResponse, CreateStorePayload, CreateStoreSuccessResponse } from "./create"
-export type { GetStoreErrorResponse, GetStoreSuccessResponse } from "./get"
+export type * from "./create"
+export type * from "./settings"
