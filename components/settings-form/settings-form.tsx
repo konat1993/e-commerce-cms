@@ -21,8 +21,8 @@ import {
     FormMessage
 } from '../ui/form'
 import { Input } from '../ui/input'
-import useEditStore from '@/service-hooks/use-edit-store'
-import useDeleteStore from '@/service-hooks/use-delete-store'
+import { useEditStore } from '@/service-hooks/store'
+import { useDeleteStore } from '@/service-hooks/store'
 import AlertModal from '../modals/alert-modal'
 import ApiAlert from '../ui/api-alert'
 import useOrigin from '@/hooks/use-origin'
@@ -110,18 +110,6 @@ const SettingsForm = ({ initialData }: Props) => {
 
             <Separator />
 
-            <ApiAlert
-                title="NEXT_PUBLIC_API_URL"
-                description={`${origin}/api/${params.storeId}`}
-                variant='public'
-                loading={origin === ""}
-            />
-            <ApiAlert
-                title="NEXT_PUBLIC_API_URL"
-                description={`${origin}/api/${params.storeId}`}
-                variant='public'
-                loading={origin === ""}
-            />
             <ApiAlert
                 title="NEXT_PUBLIC_API_URL"
                 description={`${origin}/api/${params.storeId}`}

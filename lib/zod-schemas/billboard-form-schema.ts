@@ -1,0 +1,8 @@
+import { z } from "zod"
+
+const billboardFormSchema = z.object({
+    label: z.string().min(3, { message: "String must contain at least 3 character(s)" }),
+    imageUrl: z.string().min(1)
+})
+
+export default billboardFormSchema

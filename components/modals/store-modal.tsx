@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import useCreateStore from "@/service-hooks/use-create-store"
+import { useCreateStore } from "@/service-hooks/store"
 import { storeFormSchema } from "@/lib/zod-schemas"
 import { StoreFormValues } from "@/types/store"
 

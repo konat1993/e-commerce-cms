@@ -1,18 +1,22 @@
 import React from 'react'
 
+type RequireIfNotUndefined<T> = T extends undefined ? undefined : Required<T>;
+
+type RequirePayload<PayloadData> = PayloadData extends undefined ? [] : [payload: RequireIfNotUndefined<PayloadData>];
+
 type MutationArgTypes<PayloadData, ResponseData, ResponseError> =
     PayloadData extends undefined
     ? {
         mutationFn: () => Promise<ResponseData>;
-        onSuccess?: (responseData: ResponseData) => void | Promise<void>;
-        onError?: (errorResponse: ResponseError) => void | Promise<void>;
-        onFinished?: () => void | Promise<void>;
+        onSuccess?: (responseData?: ResponseData) => any;
+        onError?: (errorResponse: ResponseError) => any;
+        onFinished?: () => any;
     }
     : {
-        mutationFn: (payload: PayloadData) => Promise<ResponseData>;
-        onSuccess?: (responseData: ResponseData, payloadData: PayloadData) => void | Promise<void>;
-        onError?: (errorResponse: ResponseError) => void | Promise<void>;
-        onFinished?: () => void | Promise<void>;
+        mutationFn: (payload?: PayloadData) => Promise<ResponseData>;
+        onSuccess?: (responseData?: ResponseData, payloadData?: PayloadData) => any;
+        onError?: (errorResponse: ResponseError) => any;
+        onFinished?: () => any;
     };
 
 const useMutateState = <PayloadData, ResponseData, ResponseError>(
@@ -24,7 +28,7 @@ const useMutateState = <PayloadData, ResponseData, ResponseError>(
     const [data, setData] = React.useState<ResponseData | undefined>(undefined)
     const [error, setError] = React.useState<ResponseError | undefined>(undefined)
 
-    const makeQuery = React.useCallback(async (payload: PayloadData) => {
+    const makeQuery = React.useCallback(async (payload?: PayloadData) => {
         setIsLoading(true)
         try {
             const responseData = await mutationFn(payload)
@@ -48,13 +52,15 @@ const useMutateState = <PayloadData, ResponseData, ResponseError>(
         }
     }, [mutationFn, onError, onFinished, onSuccess])
 
-    const mutateQuery = (payload?: PayloadData) => {
-        makeQuery(payload as PayloadData)
-    }
+    const mutateQuery = (...args: RequirePayload<PayloadData>) => {
+        makeQuery(...args);
+    };
+    // const mutateQuery = (payload: RequirePayload<PayloadData>) => {
+    //     makeQuery(payload)
+    // }
 
-    const mutateAsyncQuery = async (payload?: PayloadData) => {
+    const mutateAsyncQuery = async (payload: PayloadData) => {
         const response = await makeQuery(payload as PayloadData)
-
         return response
     }
 

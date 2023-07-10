@@ -1,7 +1,4 @@
-import { storeFormSchema } from "@/lib/zod-schemas"
-import { z } from "zod"
-
-type StoreFormValues = z.infer<typeof storeFormSchema>
+import { StoreFormValues } from "./form"
 
 type CreateStoreSuccessResponse = {
     "id": string,

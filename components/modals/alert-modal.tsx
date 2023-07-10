@@ -3,6 +3,7 @@
 import React from "react"
 import { Modal } from "../ui/modal"
 import { Button } from "../ui/button"
+import useMounted from "@/hooks/useMounted"
 
 type Props = {
     isOpen: boolean
@@ -17,12 +18,7 @@ const AlertModal = ({
     onConfirm,
     loading
 }: Props) => {
-    const [isMounted, setIsMounted] = React.useState(false)
-
-
-    React.useEffect(() => {
-        setIsMounted(true)
-    }, [])
+    const isMounted = useMounted()
 
     if (!isMounted) {
         return null

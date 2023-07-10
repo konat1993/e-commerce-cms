@@ -1,5 +1,3 @@
-import { StoreFormValues } from "./create";
-
 type DeleteStoreSuccessResponse = {
     "id": string,
     "name": string,
