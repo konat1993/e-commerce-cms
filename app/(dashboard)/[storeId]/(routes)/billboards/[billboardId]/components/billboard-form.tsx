@@ -23,6 +23,7 @@ import AlertModal from '@/components/modals/alert-modal'
 import { EditBillboardFormValues } from '@/types/billboards/edit'
 import { useCreateBillboard, useDeleteBillboard, useEditBillboard } from '@/service-hooks/billboard'
 import ImageUpload from '@/components/ui/image-upload'
+import { useParams } from 'next/navigation'
 
 type Props = {
     initialData: Billboard | null
@@ -61,7 +62,7 @@ const BillboardForm = ({ initialData }: Props) => {
         }
     }
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         mutateDeleteQuery()
     }
 

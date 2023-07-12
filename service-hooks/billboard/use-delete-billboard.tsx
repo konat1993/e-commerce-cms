@@ -4,13 +4,13 @@ import axios, { AxiosError } from 'axios'
 import { useParams, useRouter } from "next/navigation"
 import { DeleteBillboardErrorResponse, DeleteBillboardSuccessResponse } from "@/types/billboards/delete"
 
-const useDeleteBillboard = () => {
+const useDeleteBillboard = (id?: string) => {
     const params = useParams()
     const router = useRouter()
 
     return useMutateState<undefined, DeleteBillboardSuccessResponse, AxiosError<DeleteBillboardErrorResponse>>({
         mutationFn: async () => {
-            const response = await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`)
+            const response = await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId || id}`)
             return response.data
         },
         onSuccess: async () => {
