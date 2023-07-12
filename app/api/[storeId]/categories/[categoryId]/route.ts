@@ -3,46 +3,46 @@ import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib"
 
-type Params = { params: { storeId: string, billboardId: string } }
+type Params = { params: { storeId: string, categoryId: string } }
 
 export async function GET(req: NextRequest, { params }: Params) {
-    const { billboardId } = params
+    const { categoryId } = params
 
     try {
-        if (!billboardId) {
-            return new NextResponse("Billboard ID is required", { status: 400 })
+        if (!categoryId) {
+            return new NextResponse("CategoryId is required", { status: 400 })
         }
 
-        const billboardResponse = await prisma.billboard.findMany({
-            where: { id: billboardId },
+        const categoryResponse = await prisma.category.findMany({
+            where: { id: categoryId },
         })
 
-        return NextResponse.json(billboardResponse)
+        return NextResponse.json(categoryResponse)
 
     } catch (error) {
-        console.log('[BILLBOARD_ROUTE_GET', error)
+        console.log('[CATEGORY_ROUTE_GET', error)
         return new NextResponse("Internal error", { status: 500 })
     }
 }
 
 export async function PATCH(req: NextRequest, { params }: Params) {
-    const { storeId, billboardId } = params
+    const { storeId, categoryId } = params
 
     try {
         const { userId } = auth()
-        const { label, imageUrl } = await req.json()
+        const { name, billboardId } = await req.json()
 
         if (!userId) {
             return new NextResponse("Unauthenticated", { status: 401 })
         }
-        if (!label) {
-            return new NextResponse("Label is required", { status: 400 })
-        }
-        if (!imageUrl) {
-            return new NextResponse("Image URL is required", { status: 400 })
+        if (!name) {
+            return new NextResponse("Name is required", { status: 400 })
         }
         if (!billboardId) {
-            return new NextResponse("Billboard ID is required", { status: 400 })
+            return new NextResponse("BillboardId is required", { status: 400 })
+        }
+        if (!categoryId) {
+            return new NextResponse("CategoryId is required", { status: 400 })
         }
         if (!storeId) {
             return new NextResponse("Store ID is required", { status: 400 })
@@ -57,22 +57,21 @@ export async function PATCH(req: NextRequest, { params }: Params) {
             return new NextResponse("Unauthorized", { status: 403 })
         }
 
-
-        const updateBillboardResponse = await prisma.billboard.updateMany({
-            where: { id: billboardId },
-            data: { label, imageUrl }
+        const updateCategoryResponse = await prisma.category.updateMany({
+            where: { id: categoryId },
+            data: { name, billboardId, }
         })
 
-        return NextResponse.json(updateBillboardResponse)
+        return NextResponse.json(updateCategoryResponse)
 
     } catch (error) {
-        console.log('[BILLBOARDS_ROUTE_PATCH', error)
+        console.log('[CATEGORY_ROUTE_PATCH', error)
         return new NextResponse("Internal error", { status: 500 })
     }
 }
 
 export async function DELETE(req: NextRequest, { params }: Params) {
-    const { storeId, billboardId } = params
+    const { storeId, categoryId } = params
 
     try {
         const { userId } = auth()
@@ -80,29 +79,28 @@ export async function DELETE(req: NextRequest, { params }: Params) {
         if (!userId) {
             return new NextResponse("Unauthenticated", { status: 401 })
         }
-        if (!billboardId) {
-            return new NextResponse("Billboard ID is required", { status: 400 })
+        if (!categoryId) {
+            return new NextResponse("CategoryId is required", { status: 400 })
         }
 
         const storeByUserId = await prisma.store.findFirst({
             where: { id: storeId, userId }
         })
 
-
         if (!storeByUserId) {
             return new NextResponse("Unauthorized", { status: 403 })
         }
 
-        const deleteBillboardResponse = await prisma.billboard.deleteMany({
+        const deleteCategoryResponse = await prisma.category.deleteMany({
             where: {
-                id: billboardId,
+                id: categoryId,
             },
         })
 
-        return NextResponse.json(deleteBillboardResponse)
+        return NextResponse.json(deleteCategoryResponse)
 
     } catch (error) {
-        console.log('[BILLBOARDS_ROUTE_DELETE', error)
+        console.log('[CATEGORY_ROUTE_DELETE', error)
         return new NextResponse("Internal error", { status: 500 })
     }
 }

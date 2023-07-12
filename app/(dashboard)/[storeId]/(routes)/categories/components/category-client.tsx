@@ -7,11 +7,11 @@ import { Button } from '@/components/ui/button'
 import { Heading } from '@/components/ui/heading'
 import { Separator } from '@/components/ui/separator'
 import { DataTable } from '@/components/data-table'
-import { BillboardColumn, columns } from './table-columns'
+import { CategoryColumn, columns } from './table-columns'
 import ApiList from '@/components/ui/api-list'
 
 type Props = {
-    data: BillboardColumn[]
+    data: CategoryColumn[]
 }
 
 const BillboardClient = ({ data }: Props) => {
@@ -21,8 +21,8 @@ const BillboardClient = ({ data }: Props) => {
     return (
         <>
             <div className='flex items-center justify-between'>
-                <Heading title={`Billboards (${data.length})`} description='Manage billboards for your store' />
-                <Button onClick={() => { router.push(`/${params.storeId}/billboards/new`) }}>
+                <Heading title={`Categories (${data.length})`} description='Manage categories for your store' />
+                <Button onClick={() => { router.push(`/${params.storeId}/categories/new`) }}>
                     <Plus className='mr-2 h-4 w-4' />
                     Add New
                 </Button>
@@ -33,13 +33,13 @@ const BillboardClient = ({ data }: Props) => {
             <DataTable
                 columns={columns}
                 data={data}
-                searchKey='label'
-                filterInputPlaceholder="Search billboards..."
+                searchKey='name'
+                filterInputPlaceholder='Search categories...'
             />
 
             <div className='pt-6' />
-            <Heading title='API' description='API calls for Billboards' />
-            <ApiList entityName='billboards' entityIdName='billboardId' />
+            <Heading title='API' description='API calls for Categories' />
+            <ApiList entityName='categories' entityIdName='categoryId' />
         </>
     )
 }

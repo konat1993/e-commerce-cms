@@ -4,7 +4,7 @@ import axios, { AxiosError } from 'axios'
 import { useParams, useRouter } from "next/navigation"
 import { EditBillboardErrorResponse, EditBillboardPayload, EditBillboardSuccessResponse } from "@/types/billboards/edit"
 
-const useEditStore = () => {
+const useEditBillboard = () => {
     const router = useRouter()
     const params = useParams()
 
@@ -23,4 +23,4 @@ const useEditStore = () => {
     })
 }
 
-export default useEditStore
+export default useEditBillboard
