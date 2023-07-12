@@ -12,7 +12,7 @@ type Props = {
     title: string
     description: string
     variant: "public" | "admin"
-    loading: boolean
+    loading?: boolean
 }
 
 const textMap: Record<Props["variant"], string> = {
@@ -25,7 +25,7 @@ const variantMap: Record<Props["variant"], BadgeProps["variant"]> = {
     admin: "destructive"
 }
 
-const ApiAlert = ({ title, description, variant = "public", loading }: Props) => {
+const ApiAlert = ({ title, description, variant = "public", loading = false }: Props) => {
 
     const onCopy = () => {
         navigator.clipboard.writeText(description)
