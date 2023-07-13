@@ -1,4 +1,3 @@
-import { Size } from "@prisma/client"
 import { SizeFormValues } from "./form"
 
 type EditSizeFormValues = SizeFormValues // z.infer<typeof billboardFormSchema>

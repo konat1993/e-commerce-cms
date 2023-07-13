@@ -12,14 +12,14 @@ export async function GET(req: NextRequest, { params }: Params) {
             return new NextResponse("Store ID is required", { status: 400 })
         }
 
-        const sizes = await prisma.size.findMany({
+        const colors = await prisma.color.findMany({
             where: { storeId }
         })
 
-        return NextResponse.json(sizes)
+        return NextResponse.json(colors)
 
     } catch (error) {
-        console.log('[SIZES_ROUTE_GET', error)
+        console.log('[COLORS_ROUTE_GET', error)
         return new NextResponse("Internal error", { status: 500 })
     }
 
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest, { params }: Params) {
             return new NextResponse("Name is required", { status: 400 })
         }
         if (!value) {
-            return new NextResponse("Size value is required", { status: 400 })
+            return new NextResponse("Color value is required", { status: 400 })
         }
         if (!storeId) {
             return new NextResponse("Store ID is required", { status: 400 })
@@ -53,14 +53,14 @@ export async function POST(req: NextRequest, { params }: Params) {
             return new NextResponse("Unauthorized", { status: 403 })
         }
 
-        const sizeResponse = await prisma.size.create({
+        const colorResponse = await prisma.color.create({
             data: { name, value, storeId }
         })
 
-        return NextResponse.json(sizeResponse)
+        return NextResponse.json(colorResponse)
 
     } catch (error) {
-        console.log('[SIZES_ROUTE_POST', error)
+        console.log('[COLORS_ROUTE_POST', error)
         return new NextResponse("Internal error", { status: 500 })
     }
 }

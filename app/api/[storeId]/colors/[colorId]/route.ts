@@ -3,30 +3,30 @@ import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib"
 
-type Params = { params: { storeId: string, sizeId: string } }
+type Params = { params: { storeId: string, colorId: string } }
 
 export async function GET(req: NextRequest, { params }: Params) {
-    const { sizeId } = params
+    const { colorId } = params
 
     try {
-        if (!sizeId) {
-            return new NextResponse("Size ID is required", { status: 400 })
+        if (!colorId) {
+            return new NextResponse("Color ID is required", { status: 400 })
         }
 
-        const sizeResponse = await prisma.size.findUnique({
-            where: { id: sizeId },
+        const colorResponse = await prisma.color.findUnique({
+            where: { id: colorId },
         })
 
-        return NextResponse.json(sizeResponse)
+        return NextResponse.json(colorResponse)
 
     } catch (error) {
-        console.log('[SIZE_ROUTE_GET', error)
+        console.log('[COLOR_ROUTE_GET', error)
         return new NextResponse("Internal error", { status: 500 })
     }
 }
 
 export async function PATCH(req: NextRequest, { params }: Params) {
-    const { storeId, sizeId } = params
+    const { storeId, colorId } = params
 
     try {
         const { userId } = auth()
@@ -39,10 +39,10 @@ export async function PATCH(req: NextRequest, { params }: Params) {
             return new NextResponse("Name is required", { status: 400 })
         }
         if (!value) {
-            return new NextResponse("Size value URL is required", { status: 400 })
+            return new NextResponse("Color value URL is required", { status: 400 })
         }
-        if (!sizeId) {
-            return new NextResponse("Size ID is required", { status: 400 })
+        if (!colorId) {
+            return new NextResponse("Color ID is required", { status: 400 })
         }
         if (!storeId) {
             return new NextResponse("Store ID is required", { status: 400 })
@@ -58,21 +58,21 @@ export async function PATCH(req: NextRequest, { params }: Params) {
         }
 
 
-        const updateSizeResponse = await prisma.size.updateMany({
-            where: { id: sizeId },
+        const updateColorResponse = await prisma.color.updateMany({
+            where: { id: colorId },
             data: { name, value }
         })
 
-        return NextResponse.json(updateSizeResponse)
+        return NextResponse.json(updateColorResponse)
 
     } catch (error) {
-        console.log('[SIZE_ROUTE_PATCH', error)
+        console.log('[COLOR_ROUTE_PATCH', error)
         return new NextResponse("Internal error", { status: 500 })
     }
 }
 
 export async function DELETE(req: NextRequest, { params }: Params) {
-    const { storeId, sizeId } = params
+    const { storeId, colorId } = params
 
     try {
         const { userId } = auth()
@@ -80,8 +80,8 @@ export async function DELETE(req: NextRequest, { params }: Params) {
         if (!userId) {
             return new NextResponse("Unauthenticated", { status: 401 })
         }
-        if (!sizeId) {
-            return new NextResponse("Size ID is required", { status: 400 })
+        if (!colorId) {
+            return new NextResponse("Color ID is required", { status: 400 })
         }
 
         const storeByUserId = await prisma.store.findFirst({
@@ -93,16 +93,16 @@ export async function DELETE(req: NextRequest, { params }: Params) {
             return new NextResponse("Unauthorized", { status: 403 })
         }
 
-        const deleteSizeResponse = await prisma.size.deleteMany({
+        const deleteColorResponse = await prisma.color.deleteMany({
             where: {
-                id: sizeId,
+                id: colorId,
             },
         })
 
-        return NextResponse.json(deleteSizeResponse)
+        return NextResponse.json(deleteColorResponse)
 
     } catch (error) {
-        console.log('[SIZES_ROUTE_DELETE', error)
+        console.log('[COLORs_ROUTE_DELETE', error)
         return new NextResponse("Internal error", { status: 500 })
     }
 }
