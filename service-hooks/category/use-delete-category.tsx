@@ -10,7 +10,7 @@ const useDeleteCategory = (id?: string) => {
 
     return useMutateState<undefined, DeleteCategorySuccessResponse, AxiosError<DeleteCategoryErrorResponse>>({
         mutationFn: async () => {
-            const response = await axios.delete(`/api/${params.storeId}/categories/${params.categoryId || id}`)
+            const response = await axios.delete(`/api/${params.storeId}/categories/${id || params.categoryId}`)
             return response.data
         },
         onSuccess: async () => {

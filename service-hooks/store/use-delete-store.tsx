@@ -4,13 +4,13 @@ import axios, { AxiosError } from 'axios'
 import { useParams, useRouter } from "next/navigation"
 import { DeleteStoreErrorResponse, DeleteStoreSuccessResponse } from "@/types/store/delete"
 
-const useDeleteStore = () => {
+const useDeleteStore = (id?: string) => {
     const params = useParams()
     const router = useRouter()
 
     return useMutateState<undefined, DeleteStoreSuccessResponse, AxiosError<DeleteStoreErrorResponse>>({
         mutationFn: async () => {
-            const response = await axios.delete(`/api/stores/${params.storeId}`)
+            const response = await axios.delete(`/api/stores/${id || params.storeId}`)
             return response.data
         },
         onSuccess: async () => {

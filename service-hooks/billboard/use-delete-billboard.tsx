@@ -10,7 +10,7 @@ const useDeleteBillboard = (id?: string) => {
 
     return useMutateState<undefined, DeleteBillboardSuccessResponse, AxiosError<DeleteBillboardErrorResponse>>({
         mutationFn: async () => {
-            const response = await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId || id}`)
+            const response = await axios.delete(`/api/${params.storeId}/billboards/${id || params.billboardId}`)
             return response.data
         },
         onSuccess: async () => {

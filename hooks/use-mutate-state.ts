@@ -15,7 +15,7 @@ type MutationArgTypes<PayloadData, ResponseData, ResponseError> =
     }
     : {
         mutationFn: (payload?: PayloadData) => Promise<ResponseData>;
-        onSuccess?: (responseData?: ResponseData, payloadData?: PayloadData) => any;
+        onSuccess?: (responseData: ResponseData, payloadData: PayloadData) => any;
         onError?: (errorResponse: ResponseError) => any;
         onFinally?: () => any;
     };
@@ -35,7 +35,7 @@ const useMutateState = <PayloadData, ResponseData, ResponseError>(
             const responseData = await mutationFn(payload)
             setData(responseData)
             if (onSuccess) {
-                await onSuccess(responseData, payload)
+                await onSuccess(responseData, payload as PayloadData)
                 setIsSuccess(true)
             }
             return { responseData, status: "success" }
