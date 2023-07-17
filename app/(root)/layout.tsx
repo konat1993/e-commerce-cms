@@ -1,5 +1,4 @@
 import { auth } from '@clerk/nextjs'
-import axios from 'axios'
 import { redirect } from 'next/navigation'
 import prisma from "../../lib/prismadb"
 

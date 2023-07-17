@@ -52,8 +52,6 @@ const CategoryForm = ({ initialData, billboards }: Props) => {
 
     const { isLoading: isDeleting, mutateQuery: mutateDeleteQuery } = useDeleteCategory()
 
-
-
     const onSubmit = ({ name, billboardId }: EditCategoryFormValues) => {
         if (!initialData) {
             mutateCreateQuery({ name, billboardId })

@@ -14,3 +14,8 @@ export async function waitTester(timeout: number = 1000) {
     }, timeout);
   })
 }
+
+export const formatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD"
+})

@@ -11,7 +11,7 @@ type Props = {
 
 const Billboards = async ({ params: { storeId } }: Props) => {
     const { userId } = auth()
-
+    console.log("Billboards userId", { userId })
     if (!userId) {
         redirect("/sign-in")
     }

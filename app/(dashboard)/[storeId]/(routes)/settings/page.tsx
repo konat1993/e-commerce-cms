@@ -11,6 +11,8 @@ type Props = {
 
 const Settings = async ({ params }: Props) => {
     const { userId } = auth()
+    console.log("Settings userId", { userId });
+
 
     if (!userId) {
         redirect("/sign-in")

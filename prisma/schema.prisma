@@ -16,10 +16,11 @@ model Store {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  billboards Billboard[] @relation("StoreToBillboard")
-  categories Category[]  @relation("StoreToCategory")
-  sizes      Size[]      @relation("StoreToSize")
-  colors     Color[]     @relation("StoreToColor")
+  billboards Billboard[] @relation("StoreToBillboards")
+  categories Category[]  @relation("StoreToCategories")
+  sizes      Size[]      @relation("StoreToSizes")
+  colors     Color[]     @relation("StoreToColors")
+  products   Product[]   @relation("StoreToProducts")
 }
 
 model Billboard {
@@ -31,8 +32,8 @@ model Billboard {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  store      Store      @relation("StoreToBillboard", fields: [storeId], references: [id])
-  categories Category[] @relation("BillboardToCategory")
+  store      Store      @relation("StoreToBillboards", fields: [storeId], references: [id])
+  categories Category[] @relation("BillboardToCategories")
 
   @@index([storeId])
 }
@@ -46,8 +47,9 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  store     Store     @relation("StoreToCategory", fields: [storeId], references: [id])
-  billboard Billboard @relation("BillboardToCategory", fields: [billboardId], references: [id])
+  store     Store     @relation("StoreToCategories", fields: [storeId], references: [id])
+  billboard Billboard @relation("BillboardToCategories", fields: [billboardId], references: [id])
+  products  Product[] @relation("CategoryToProducts")
 
   @@index([storeId])
   @@index([billboardId])
@@ -62,7 +64,8 @@ model Size {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  store Store @relation("StoreToSize", fields: [storeId], references: [id])
+  store    Store     @relation("StoreToSizes", fields: [storeId], references: [id])
+  products Product[] @relation("SizeToProducts")
 
   @@index([storeId])
 }
@@ -76,7 +79,51 @@ model Color {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  store Store @relation("StoreToColor", fields: [storeId], references: [id])
+  products Product[] @relation("ColorToProducts")
+
+  store Store @relation("StoreToColors", fields: [storeId], references: [id])
 
   @@index([storeId])
+}
+
+model Product {
+  id         String  @id @default(uuid())
+  name       String
+  price      Decimal
+  isFeatured Boolean @default(false)
+  isArchived  Boolean @default(false)
+
+  storeId    String
+  categoryId String
+  sizeId     String
+  colorId    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  images Image[] @relation("ProductToImages")
+
+  store    Store    @relation("StoreToProducts", fields: [storeId], references: [id])
+  category Category @relation("CategoryToProducts", fields: [categoryId], references: [id])
+  size     Size     @relation("SizeToProducts", fields: [sizeId], references: [id])
+  color    Color    @relation("ColorToProducts", fields: [colorId], references: [id])
+
+  @@index([storeId])
+  @@index([categoryId])
+  @@index([sizeId])
+  @@index([colorId])
+}
+
+model Image {
+  id  String @id @default(uuid())
+  url String
+
+  productId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product Product @relation("ProductToImages", fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
 }

@@ -9,11 +9,12 @@ import { CldUploadWidget } from "next-cloudinary"
 type Props = {
     disabled?: boolean
     onChange: (url: string) => void
-    onRemove: () => void
+    onRemove: (url: string) => void
     value: string[]
+    multiple?: boolean
 }
 
-const ImageUpload = ({ value, onChange, onRemove, disabled }: Props) => {
+const ImageUpload = ({ value, onChange, onRemove, disabled, multiple = false }: Props) => {
     const isMounted = useMounted()
 
     const onUpload = (result: any) => {
@@ -37,7 +38,7 @@ const ImageUpload = ({ value, onChange, onRemove, disabled }: Props) => {
                         <div className="z-10 absolute top-2 right-2">
                             <Button
                                 type="button"
-                                onClick={() => onRemove()}
+                                onClick={() => onRemove(url)}
                                 variant="destructive"
                                 size="icon"
                             >
@@ -57,7 +58,8 @@ const ImageUpload = ({ value, onChange, onRemove, disabled }: Props) => {
                 onUpload={onUpload}
                 uploadPreset="scpu5pr8"
                 options={{
-                    cropping: true, folder: "store-app",
+                    folder: "store-app",
+                    multiple
 
                 }}
             >

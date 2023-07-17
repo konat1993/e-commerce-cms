@@ -48,7 +48,6 @@ const DataTable = <TData, TValue>({
         state: {
             columnFilters,
         },
-        // initialState: { pagination: { pageSize: 10 } },
     })
 
     const { pagination: { pageIndex } } = table.getState()
